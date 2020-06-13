@@ -132,7 +132,7 @@ extension ViewController: MKMapViewDelegate {
         if annotation is MKUserLocation{
             return nil
         }
-//
+
 //        let pinAnnotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "droppablePin")
 //        pinAnnotation.animatesDrop = true
 //        pinAnnotation.pinTintColor =
@@ -142,7 +142,8 @@ extension ViewController: MKMapViewDelegate {
         pinAnnotation.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         return pinAnnotation
     }
-    
+
+    //MARK:- callout accessory
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let alert = UIAlertController(title: "Alert", message: "Your Place", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)

@@ -66,6 +66,8 @@
 		8EA0836324943851008C3C25 /* Map Demo */ = {
 			isa = PBXGroup;
 			children = (
+				8EA08387249458A1008C3C25 /* Places.plist */,
+				8EA08385249458A1008C3C25 /* Place.swift */,
 				8EA0836424943851008C3C25 /* AppDelegate.swift */,
 				8EA0836624943851008C3C25 /* SceneDelegate.swift */,
 				8EA0836824943851008C3C25 /* ViewController.swift */,
@@ -82,9 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				8EA08384249458A1008C3C25 /* ic_place_3x.png */,
-				8EA08385249458A1008C3C25 /* Place.swift */,
 				8EA08386249458A1008C3C25 /* ic_place_2x.png */,
-				8EA08387249458A1008C3C25 /* Places.plist */,
 				8EA08388249458A1008C3C25 /* ic_place.png */,
 			);
 			path = "Custom Annotation Demo Resources-20200612";
