@@ -29,6 +29,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
            //start updating the location of the user
            locationManager.startUpdatingLocation()
         
+        //add delegate to map object
+        mapObj.delegate = self
+        
         // set region
         setRegion(43.39, -79.78, "Toronto", "Downtown")
         
@@ -129,9 +132,21 @@ extension ViewController: MKMapViewDelegate {
         if annotation is MKUserLocation{
             return nil
         }
-        
-        let pinAnnotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "droppablePin")
-        pinAnnotation.animatesDrop = true
+//
+//        let pinAnnotation = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "droppablePin")
+//        pinAnnotation.animatesDrop = true
+//        pinAnnotation.pinTintColor =
+        let pinAnnotation = mapObj.dequeueReusableAnnotationView(withIdentifier: "droppablePin") ?? MKPinAnnotationView()
+        pinAnnotation.image = UIImage(named: "ic_place_2x")
+        pinAnnotation.canShowCallout = true
+        pinAnnotation.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         return pinAnnotation
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let alert = UIAlertController(title: "Alert", message: "Your Place", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
 }
