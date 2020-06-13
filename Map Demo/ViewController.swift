@@ -11,12 +11,15 @@ import MapKit
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     var locationManager = CLLocationManager()
-       
+       // create places array
+       let places = Place.getPlaces()
+
     @IBOutlet weak var mapObj: MKMapView!
     override func viewDidLoad() {
            super.viewDidLoad()
            // Do any additional setup after loading the view.
-         
+        
+        
            // we give delegate to location manager to this class
            locationManager.delegate = self
            
@@ -43,8 +46,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
         mapObj.addGestureRecognizer(doubleTap)
+        
+        // add annotation for the places
+        addPlaces()
+        
+        // add polyline
+        addPolyline()
        }
+    
+    /// add places function
+    func addPlaces() {
+        mapObj.addAnnotation(places as! MKAnnotation)
+        
+        let overlays = places.map {MKCircle(center: $0.coordinate, radius: 1000)}
+        mapObj.addOverlays(overlays)
+    }
 
+    func addPolyline(){
+        
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation = locations[0]
         
@@ -149,5 +170,18 @@ extension ViewController: MKMapViewDelegate {
         let cancelAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
+    }
+
+    //MARK:- render for overlay
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay is MKCircle {
+            let rendrer = MKCircleRenderer(overlay: overlay)
+            rendrer.fillColor = UIColor.black.withAlphaComponent(0.5)
+            rendrer.strokeColor = UIColor.green
+            rendrer.lineWidth = 2
+            return rendrer
+        }
+        
+        return MKOverlayRenderer()
     }
 }

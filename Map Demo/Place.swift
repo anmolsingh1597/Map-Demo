@@ -1,9 +1,9 @@
 //
 //  Place.swift
-//  Overlay Demo
+//  Map Demo
 //
-//  Created by Mohammad Kiani on 2020-01-10.
-//  Copyright © 2020 mohammadkiani. All rights reserved.
+//  Created by Anmol singh on 2020-06-13.
+//  Copyright © 2020 Swift Project. All rights reserved.
 //
 
 import Foundation
