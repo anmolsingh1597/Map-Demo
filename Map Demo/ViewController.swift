@@ -11,6 +11,8 @@ import MapKit
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     var locationManager = CLLocationManager()
+    
+    var destination: CLLocationCoordinate2D!
        // create places array
        let places = Place.getPlaces()
 
@@ -36,7 +38,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         mapObj.delegate = self
         
         /// set region
-//        setRegion(43.39, -79.78, "Toronto", "Downtown")
+        setRegion(43.39, -79.78, "Toronto", "Downtown")
         
         // long press gesture
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(addLongPressGesture))
@@ -45,7 +47,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // double tap gesture
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
-//        mapObj.addGestureRecognizer(doubleTap)
+        mapObj.addGestureRecognizer(doubleTap)
         
         // add annotation for the places
         addPlaces()
@@ -57,7 +59,44 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         addPolygon()
        }
     
-    /// add places function
+    //MARK:-draw direction
+    
+    @IBAction func drawDirection(_ sender: UIButton) {
+        mapObj.removeOverlays(mapObj.overlays)
+        
+        let source = MKPlacemark(coordinate: locationManager.location!.coordinate)
+        let destination = MKPlacemark(coordinate: self.destination)
+        
+        //request a direction
+        let directionRequest = MKDirections.Request()
+        
+        //define source and destination
+        directionRequest.source = MKMapItem(placemark: source)
+        directionRequest.destination = MKMapItem(placemark: destination)
+        
+        //transportation type
+        directionRequest.transportType = .automobile
+        
+        // calculate direction
+        let directions = MKDirections(request: directionRequest)
+        directions.calculate { (response, error) in
+            guard let directionResponse = response else {return}
+            // create route
+            let route = directionResponse.routes[0]
+            // draw polyline
+            self.mapObj.addOverlay(route.polyline, level: .aboveRoads)
+            
+            // defining the bounding map react
+            let rect = route.polyline.boundingMapRect
+            self.mapObj.setRegion(MKCoordinateRegion(rect), animated: true)
+            
+            self.mapObj.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100), animated: true)
+        }
+        
+    }
+    
+    
+    //MARK:- add places function
     func addPlaces() {
         mapObj.addAnnotations(places)
         
@@ -65,14 +104,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         mapObj.addOverlays(overlays)
     }
 
-    /// add polyline
+    //MARK:- add polyline
     func addPolyline(){
         let locations = places.map{$0.coordinate}
         let polyline = MKPolyline(coordinates: locations, count: locations.count)
         mapObj.addOverlay(polyline)
     }
     
-    /// func add polygon
+    //MARK:- func add polygon
     func addPolygon(){
         let locations = places.map{$0.coordinate}
         let polygon = MKPolygon(coordinates: locations, count: locations.count)
@@ -94,7 +133,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let region = MKCoordinateRegion(center: customLocation, span: span)
               
         // 4 - assign region to map
-//        mapObj.setRegion(region, animated: true)
+        mapObj.setRegion(region, animated: true)
     }
  
     @objc func addLongPressGesture(gesture: UIGestureRecognizer){
@@ -103,16 +142,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         addAnnotation(coordinates ,"Long Pressed" , "Location")
     }
     
+    
+    
     @objc func doubleTapped(gesture: UIGestureRecognizer){
         
         let touchpoint = gesture.location(in: mapObj)
         let coordinates = mapObj.convert(touchpoint, toCoordinateFrom: mapObj)
        addAnnotation(coordinates, "Double Tapped", "Location")
         
-
-        
+        self.destination = coordinates
         
     }
+    
+  
     
     func setRegion(_ latitude: CLLocationDegrees, _ longitutde: CLLocationDegrees, _ title: String, _ subtitle: String){
 
