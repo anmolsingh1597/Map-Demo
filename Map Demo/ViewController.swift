@@ -251,3 +251,37 @@ extension ViewController: MKMapViewDelegate {
         return MKOverlayRenderer()
     }
 }
+
+//MARK:- User Defaults
+/*
+ 
+ import Cocoa
+
+ let defaults = UserDefaults.standard
+
+ defaults.set(24, forKey: "age")
+ defaults.set(0.24, forKey: "volume")
+ defaults.set(true, forKey: "isLoggedIn")
+ defaults.set(Date(), forKey: "todayDate")
+
+ let array = [1,2,3]
+ defaults.set(array, forKey: "intArray")
+
+ let dict = ["name": "Anmol", "course": "iOS"]
+ defaults.set(dict, forKey: "dictValues")
+
+ let age = defaults.integer(forKey: "age")
+ let age2 = defaults.integer(forKey: "age") as Int
+
+ let volume = defaults.float(forKey: "volume")
+ let loginInfo = defaults.bool(forKey: "isLoggedIn")
+ let todayDate = defaults.object(forKey: "todayDate")
+ let intArray = defaults.array(forKey: "intArray")
+ let dictionary = defaults.dictionary(forKey: "dictValues")
+
+ print(age)
+
+
+
+ 
+ */
