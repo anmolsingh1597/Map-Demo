@@ -35,8 +35,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         //add delegate to map object
         mapObj.delegate = self
         
-        // set region
-        setRegion(43.39, -79.78, "Toronto", "Downtown")
+        /// set region
+//        setRegion(43.39, -79.78, "Toronto", "Downtown")
         
         // long press gesture
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(addLongPressGesture))
@@ -45,25 +45,38 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         // double tap gesture
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
-        mapObj.addGestureRecognizer(doubleTap)
+//        mapObj.addGestureRecognizer(doubleTap)
         
         // add annotation for the places
         addPlaces()
         
-        // add polyline
-        addPolyline()
+        /// add polyline
+//        addPolyline()
+        
+        // add polygon
+        addPolygon()
        }
     
     /// add places function
     func addPlaces() {
-        mapObj.addAnnotation(places as! MKAnnotation)
+        mapObj.addAnnotations(places)
         
-        let overlays = places.map {MKCircle(center: $0.coordinate, radius: 1000)}
+        let overlays = places.map { MKCircle(center: $0.coordinate, radius: 1000)}
         mapObj.addOverlays(overlays)
     }
 
+    /// add polyline
     func addPolyline(){
-        
+        let locations = places.map{$0.coordinate}
+        let polyline = MKPolyline(coordinates: locations, count: locations.count)
+        mapObj.addOverlay(polyline)
+    }
+    
+    /// func add polygon
+    func addPolygon(){
+        let locations = places.map{$0.coordinate}
+        let polygon = MKPolygon(coordinates: locations, count: locations.count)
+        mapObj.addOverlay(polygon)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -81,7 +94,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let region = MKCoordinateRegion(center: customLocation, span: span)
               
         // 4 - assign region to map
-        mapObj.setRegion(region, animated: true)
+//        mapObj.setRegion(region, animated: true)
     }
  
     @objc func addLongPressGesture(gesture: UIGestureRecognizer){
@@ -178,6 +191,17 @@ extension ViewController: MKMapViewDelegate {
             let rendrer = MKCircleRenderer(overlay: overlay)
             rendrer.fillColor = UIColor.black.withAlphaComponent(0.5)
             rendrer.strokeColor = UIColor.green
+            rendrer.lineWidth = 2
+            return rendrer
+        }else if overlay is MKPolyline {
+            let rendrer = MKPolylineRenderer(overlay: overlay)
+            rendrer.strokeColor = UIColor.blue
+            rendrer.lineWidth = 3
+            return rendrer
+        }else if overlay is MKPolygon {
+            let rendrer = MKPolygonRenderer(overlay: overlay)
+            rendrer.fillColor = UIColor.red.withAlphaComponent(0.6)
+            rendrer.strokeColor = UIColor.blue
             rendrer.lineWidth = 2
             return rendrer
         }

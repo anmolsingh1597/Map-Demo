@@ -21,7 +21,7 @@ class Place: NSObject, MKAnnotation {
     }
     
     static func getPlaces() -> [Place] {
-        guard let path = Bundle.main.path(forResource: "Places", ofType: "plist"), let array = NSArray(contentsOfFile: path) else { return [] }
+        guard let path = Bundle.main.path(forResource: "Place", ofType: "plist"), let array = NSArray(contentsOfFile: path) else { return [] }
         
         var places = [Place]()
         
